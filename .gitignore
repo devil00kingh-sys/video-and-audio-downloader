@@ -1,0 +1,6 @@
+﻿app-run.log
+app-run.err.log
+__pycache__/
+*.py[cod]
+.venv/
+venv/
