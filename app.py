@@ -28,11 +28,12 @@ def ytdlp_options(extra=None):
 
 def describe_ytdlp_error(error):
     message = str(error)
-    if "Sign in to confirm" in message or "confirm you’re not a bot" in message.lower():
+    normalized = message.lower().replace("’", "'").replace("‘", "'")
+    if "sign in to confirm" in normalized or "confirm you're not a bot" in normalized:
         return (
-            "YouTube is blocking requests from this public hosting server (bot check or rate limit). "
-            "This link may work when you run the downloader on your own computer. "
-            "Do not add Google cookies to this public website."
+            "YouTube blocked this request with a bot check. The hosted service cannot access this video right now. "
+            "Try an official download option or run the app locally for media you are authorized to download. "
+            "Do not add personal Google cookies to a public server."
         )
     return message[:300]
 
@@ -183,7 +184,7 @@ def download():
         return resp
     except Exception as e:
         shutil.rmtree(tmp, ignore_errors=True)
-        return jsonify(error=f"Download failed: {str(e)[:200]}"), 500
+        return jsonify(error=f"Download failed: {describe_ytdlp_error(e)[:300]}"), 500
 
 
 if __name__ == "__main__":
